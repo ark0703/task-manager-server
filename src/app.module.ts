@@ -21,6 +21,8 @@ import { AuditLog } from './audit_log/audit_log.entities';
 import { NotificationPreference } from './notification_preferences/notification_preferences.entities';
 import { RecurringTask } from './recurring_task/recurring_task.entities';
 import { ConfigModule } from '@nestjs/config';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   controllers: [
@@ -34,6 +36,7 @@ import { ConfigModule } from '@nestjs/config';
     NotificationService,
     NotificationPreferencesService,
     UserService,
+    AuthService,
   ],
   imports: [
     TaskModule,
@@ -42,6 +45,7 @@ import { ConfigModule } from '@nestjs/config';
     RecurringTaskSettingsModule,
     NotificationPreferencesModule,
     UserModule,
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -60,6 +64,7 @@ import { ConfigModule } from '@nestjs/config';
         NotificationPreference,
         RecurringTask,
       ],
+      autoLoadEntities: true,
       synchronize: true,
       logging: true,
     }),

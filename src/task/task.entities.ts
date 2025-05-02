@@ -3,10 +3,20 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+export enum TaskStatus {
+  TODO = 'TODO',
+  IN_PROGRESS = 'IN_PROGRESS',
+  DONE = 'DONE',
+}
+export enum TaskPriority {
+  EASY = 'EASY',
+  MEDIUM = 'MEDIUM',
+  HARD = 'HARD',
+}
 
 @Entity()
 export class Task {
@@ -19,13 +29,23 @@ export class Task {
   @Column({ nullable: false })
   description: string;
 
-  @Column({ default: 'pending' })
-  status: string;
+  @Column({
+    type: 'enum',
+    enum: TaskStatus,
+    enumName: 'task_status_enum',
+    default: TaskStatus.TODO,
+  })
+  status: TaskStatus;
 
-  @Column({ default: 'medium' })
-  priority: string;
+  @Column({
+    type: 'enum',
+    enum: TaskPriority,
+    enumName: 'task_priority_enum',
+    default: TaskPriority.MEDIUM,
+  })
+  priority: TaskPriority;
 
-  @Column()
+  @Column({ type: 'timestamp' })
   dueDate: Date;
 
   @ManyToOne(() => User, (user) => user.createdTasks)
