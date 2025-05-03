@@ -3,7 +3,7 @@ import { Task } from './task.entities';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/user.entities';
-import { CreateTaskDto } from './create-task.dto';
+import { CreateTaskDto, TaskPriority, TaskStatus } from './create-task.dto';
 
 @Injectable()
 export class TaskService {
@@ -17,7 +17,7 @@ export class TaskService {
 
   async create(taskData: CreateTaskDto, creator: User): Promise<Task> {
     const assignedUser = await this.userRepo.findOne({
-      where: { id: taskData.assignedToId },
+      where: { id: Number(taskData.assignedToId) },
     });
 
     if (!assignedUser) {
@@ -25,7 +25,11 @@ export class TaskService {
     }
 
     const task = this.taskRepo.create({
-      ...taskData,
+      title: taskData.title,
+      description: taskData.description,
+      status: taskData.status as TaskStatus,
+      priority: taskData.priority as TaskPriority,
+      dueDate: taskData.dueDate,
       assignedTo: assignedUser,
       createdBy: creator,
     });
@@ -36,7 +40,7 @@ export class TaskService {
     return this.taskRepo.find({ relations: ['createdBy', 'assignedTo'] });
   }
 
-  async findOne(id: number): Promise<Task | null> {
+  async findOneTask(id: number): Promise<Task | null> {
     const task = this.taskRepo.findOne({
       where: { id },
       relations: ['createdBy', 'assignedTo'],
@@ -48,6 +52,18 @@ export class TaskService {
   }
 
   async update(id: number, taskData: Partial<Task>) {
-    const task = this.findOne(id);
+    const task = await this.findOneTask(id);
+    if (!task) {
+      throw new NotFoundException('Task Not Found');
+    }
+    return await this.taskRepo.update(+id, taskData);
+  }
+
+  async remove(id: number) {
+    const task = await this.findOneTask(id);
+    if (!task) {
+      throw new NotFoundException('Task Not Found');
+    }
+    await this.taskRepo.remove(task);
   }
 }

@@ -4,7 +4,6 @@ import {
   IsEnum,
   IsDateString,
   IsOptional,
-  IsUUID,
   IsNumber,
 } from 'class-validator';
 
@@ -12,6 +11,7 @@ export enum TaskStatus {
   PENDING = 'PENDING',
   IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',
+  TODO = 'TODO',
 }
 
 export enum TaskPriority {
@@ -30,6 +30,7 @@ export class CreateTaskDto {
   description: string;
 
   @IsEnum(TaskStatus)
+  @IsOptional()
   status: TaskStatus;
 
   @IsEnum(TaskPriority)
@@ -45,5 +46,5 @@ export class CreateTaskDto {
 
   @IsNotEmpty()
   @IsNumber()
-  assignedToId: string;
+  assignedToId: number;
 }

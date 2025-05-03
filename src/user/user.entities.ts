@@ -22,8 +22,26 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ nullable: true })
+  phone: string;
+
+  @Column({ nullable: true })
+  profilePicture: string;
+
+  @Column({ nullable: true })
+  DOB: Date;
+
+  @Column({ nullable: true })
+  department: string;
+
+  @Column({ nullable: true })
+  designation: string;
+
   @Column({ default: 'user' })
   role: string;
+
+  @Column({ default: true })
+  isActive: boolean;
 
   @OneToMany(() => Task, (task) => task.createdBy)
   createdTasks: Task[];

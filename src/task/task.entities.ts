@@ -1,4 +1,5 @@
 import { User } from 'src/user/user.entities';
+import { TaskStatus, TaskPriority } from './create-task.dto';
 import {
   Column,
   CreateDateColumn,
@@ -6,17 +7,6 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-
-export enum TaskStatus {
-  TODO = 'TODO',
-  IN_PROGRESS = 'IN_PROGRESS',
-  DONE = 'DONE',
-}
-export enum TaskPriority {
-  EASY = 'EASY',
-  MEDIUM = 'MEDIUM',
-  HARD = 'HARD',
-}
 
 @Entity()
 export class Task {
